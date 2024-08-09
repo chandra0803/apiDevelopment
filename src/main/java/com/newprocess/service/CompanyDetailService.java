@@ -32,16 +32,18 @@ public class CompanyDetailService implements CompanyDetailsService {
         return companyDetails;
     }
 
-    @Override
-    public CompanyDetails getById(Long id) {
-        return companyDetailsRepository.findById(id).orElse(null);
+    public ResponseMessage getById(Long id) {
+        Optional<CompanyDetails> companyDetails = companyDetailsRepository.findById(id);
+        if (companyDetails.isEmpty()) {
+            return AppUtility.constructFailure("Company Details not found for this id " + id, id);
+        } else {
+            return AppUtility.constructSuccess(companyDetails, id);
+        }
     }
 
-
-    public CompanyDetails save(CompanyDetails inputCompanyDetails) {
-        companyDetailsRepository.save(inputCompanyDetails);
-        log.info("updated companyDetails :{}", inputCompanyDetails);
-        return inputCompanyDetails;
+    public ResponseMessage save(CompanyDetails inputCompanyDetails) {
+        log.info("Request:: CompanyDetails :{}", inputCompanyDetails);
+        return AppUtility.saveOrUpdateDomain(inputCompanyDetails.getCompanyId(),inputCompanyDetails, companyDetailsRepository);
     }
 
     public ResponseMessage delete(Long companyDetailsId) throws ResourceNotFoundException {
@@ -52,9 +54,11 @@ public class CompanyDetailService implements CompanyDetailsService {
         }
         if (!companyDetails.isEmpty()) {
             log.info("Going to delete for {}", companyDetails.get());
+            AppUtility.constructSuccess("Successfully deleted", companyDetails.get().getCompanyId());
+
             companyDetailsRepository.delete(companyDetails.get());
             log.info("Successfully deleted");
-            return ResponseMessage.builder().details("Successfully deleted").build();
+            return ResponseMessage.builder().responseMessage("Successfully deleted").build();
         }
         return null;
     }

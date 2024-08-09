@@ -6,18 +6,13 @@ spring:
   cloud:
     config:
       label:
-  #autoconfigure:
-   # exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-  #autoconfigure:
-  #exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-  #exclude[1]: org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
   security:
    user :
      name: user
      password: pass
-  zipkin:
-    base-url: http://localhost:9411
-    enabled: false
+#  zipkin:
+#    base-url: http://localhost:9411
+#    enabled: false
   boot:
     admin:
       client:
@@ -49,6 +44,20 @@ spring:
       write-date-keys-as-timestamps: false
       write-dates-as-timestamps: false
     time-zone: UTC
+appApi:
+  credentialsMap:
+  "ApkType": "E-BILLING"
+  "ApkVersion": "Ver 1.2.454"
+  "BluetoothID": "45:45:78:FF:V2"
+  "DeviceName": "POCO M3"
+  "DeviceID": "c760c7d0bf9ade1d"
+  "DeviceNotificationID": "548778778779744546"
+  "IMEI": "C760C7D0BF9ADE1D"
+  "Latitude": "8.5517394"
+  "Longitude": "8.787944"
+  "Altitude": "0.0000"
+  "ServiceName": "SaveOrUpdateCompanyDetails"
+  "TokenID": "548778778779744546"
 server:
   address: 0.0.0.0
   port: 55530

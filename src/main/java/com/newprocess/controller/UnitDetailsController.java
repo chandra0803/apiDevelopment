@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +38,7 @@ public class UnitDetailsController {
             content = @Content(schema = @Schema(implementation = UnitDetails.class)))
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = UnitDetails.class)))
-    public UnitDetails getUnitDetailsById(@PathVariable(value = "id") Long id)
+    public ResponseMessage getUnitDetailsById(@PathVariable(value = "id") Long id)
             throws ResourceNotFoundException {
         return unitDetailsService.getById(id);
     }
@@ -53,9 +52,8 @@ public class UnitDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = UnitDetails.class)))
 
-    public ResponseEntity createUnitDetails(@RequestBody UnitDetails unitDetails) {
-        unitDetailsService.save(unitDetails);
-        return ResponseEntity.ok("Unit Details successfully created");
+    public ResponseMessage createUnitDetails(@RequestBody UnitDetails unitDetails) {
+        return unitDetailsService.save(unitDetails);
     }
 
 

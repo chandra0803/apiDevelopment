@@ -13,9 +13,9 @@ public interface UnitDetailsService {
 
     public List<UnitDetails> listAll();
 
-    public UnitDetails getById(Long id);
+    public ResponseMessage getById(Long id);
 
-    public UnitDetails save(UnitDetails unitDetails);
+    public ResponseMessage save(UnitDetails unitDetails);
 
     public ResponseMessage delete(Long id) throws ResourceNotFoundException;
 }

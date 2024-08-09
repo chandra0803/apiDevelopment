@@ -12,11 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -41,11 +39,9 @@ public class StateDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = StateDetails.class)))
 
-    public ResponseEntity<StateDetails> getStateDetailsById(@PathVariable(value = "id") Long employeeId)
+    public ResponseMessage getStateDetailsById(@PathVariable(value = "id") Long stateId)
             throws ResourceNotFoundException {
-        StateDetails stateDetails = stateDetailsRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("StateDetails Details not found for this id :: " + employeeId));
-        return ResponseEntity.ok().body(stateDetails);
+        return stateDetailsService.getById(stateId);
     }
 
     @PostMapping("/stateDetails")
@@ -57,14 +53,13 @@ public class StateDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = StateDetails.class)))
 
-    public ResponseEntity createStateDetails(@RequestBody StateDetails stateDetails) {
-        stateDetailsService.save(stateDetails);
-        return ResponseEntity.ok("StateDetails details successfully created");
+    public ResponseMessage createStateDetails(@RequestBody StateDetails stateDetails) {
+        return stateDetailsService.save(stateDetails);
     }
 
     @DeleteMapping("/stateDetails/{id}")
     public ResponseMessage deleteStateDetails(@PathVariable(value = "id") Long stateDetailsId)
             throws ResourceNotFoundException {
-       return stateDetailsService.delete(stateDetailsId);
+        return stateDetailsService.delete(stateDetailsId);
     }
 }

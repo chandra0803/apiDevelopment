@@ -13,9 +13,9 @@ public interface BranchDetailsService {
 
     public List<BranchDetails> listAll();
 
-    public BranchDetails getById(Long id);
+    public ResponseMessage getById(Long id);
 
-    public BranchDetails save(BranchDetails branchDetails);
+    public ResponseMessage save(BranchDetails branchDetails);
 
     public ResponseMessage delete(Long id) throws ResourceNotFoundException;
 }

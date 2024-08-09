@@ -16,10 +16,11 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
@@ -29,37 +30,45 @@ import reactor.netty.http.client.HttpClient;
 
 @Configuration
 @EnableWebSecurity
-//@EnableConfigurationProperties({ SecurityProperties.class})
-//@EnableAutoConfiguration(exclude = {
-//      org.springframework.boot.autoconfigure.security.SecurityDataConfiguration.class})
-// org.springframework.boot.actuate.autoconfigure.ManagementSecurityAutoConfiguration.class})
-public class AndroidApiProcessConfiguration {
+public class AndroidApiProcessConfiguration extends WebSecurityConfigurerAdapter {
 
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                // Spring Security should completely ignore URLs starting with /resources/
+                .antMatchers("/v1/api/**");
+    }
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/v1/api/**").permitAll().anyRequest()
+                .permitAll();
+    }
 
-  /*protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.inMemoryAuthentication()
-            .withUser("user1").password("pass").roles("USER");
-  } */
+    /* @Bean
+     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+         http.authorizeRequests()
+                 .antMatchers("/v1/api").permitAll()
+                 .antMatchers("/v1/api/**").permitAll()
+                 .anyRequest().authenticated()
+                 .and()
+                 .sessionManagement()
+                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                 .and()
+                 .csrf().disable()
+                 .httpBasic();
 
+         http.headers().cacheControl();
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/v1/api").permitAll()
-                .antMatchers("/v1/api/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .csrf().disable()
-                .httpBasic();
-
-        http.headers().cacheControl();
-
-        return http.build();
+         return http.build();
+     }*/
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                // enable in memory based authentication with a user named "user" and "admin"
+                .inMemoryAuthentication().withUser("user").password("pass").roles("USER")
+                .and().withUser("admin").password("password").roles("USER", "ADMIN");
     }
 
     /**
@@ -89,9 +98,7 @@ public class AndroidApiProcessConfiguration {
                 .contact(new Contact().name("Chandra, LLC")
                         .url("https://chandraInfo.com/"))
                 .version("v1.0.0"));
-
     }
-
 
     @Bean
     public WebClient webClient() {

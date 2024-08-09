@@ -26,35 +26,35 @@ import java.time.LocalDateTime;
 public class CategoryDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ctgryPk;
+    private Long categoryId;
 
     @Column(name = "ctgry_type", length = 50)
-    private String ctgryType;
+    private String categoryType;
 
     @Column(name = "ctgry_name", length = 50)
-    private String ctgryName;
+    private String categoryName;
 
     @CreatedBy
     @Column(name = "ctgry_created_by", length = 20)
-    private Long ctgryCreatedBy;
+    private Long categoryCreatedBy;
 
     @LastModifiedBy
     @Column(name = "ctgry_modified_by", length = 20)
-    private Long ctgryModifiedBy;
+    private Long categoryModifiedBy;
 
     @LastModifiedDate
     @Column(name = "ctgry_modified_date", length = 50)
-    private LocalDateTime ctgryModifiedDate;
+    private LocalDateTime categoryModifiedDate;
 
     @CreatedDate
     @Column(name = "ctgry_created_date", nullable = false, length = 50)
-    private Timestamp ctgryCreatedDate;
+    private Timestamp categoryCreatedDate;
 
     @Column(name = "ctgry_record_status", length = 20)
-    private Long ctgryRecordStatus;
+    private Long categoryRecordStatus;
 
     @Column(name = "ctgry_HSN_code", length = 30)
-    private String ctgryHSNCode;
+    private String categoryHSNCode;
 
 
     @OneToOne(cascade = CascadeType.ALL)

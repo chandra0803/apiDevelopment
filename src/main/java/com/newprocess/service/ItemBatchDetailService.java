@@ -32,17 +32,20 @@ public class ItemBatchDetailService implements ItemBatchDetailsService {
         return itemBatchDetails;
     }
 
-    @Override
-    public ItemBatchDetails getById(Long id) {
-        return itemBatchDetailsRepository.findById(id).orElse(null);
+    public ResponseMessage getById(Long id) {
+        Optional<ItemBatchDetails> itemBatchDetails = itemBatchDetailsRepository.findById(id);
+        if (itemBatchDetails.isEmpty()) {
+            return AppUtility.constructFailure("itemBatch Details not found for this id " + id, id);
+        } else {
+            return AppUtility.constructSuccess(itemBatchDetails, id);
+        }
     }
 
+    public ResponseMessage save(ItemBatchDetails inputItemBatchDetails) {
+        log.info("Request:: ItemBatchDetails Details :{}", inputItemBatchDetails);
+        return  AppUtility.saveOrUpdateDomain(inputItemBatchDetails.getItemBatchId(),inputItemBatchDetails, itemBatchDetailsRepository);
+     }
 
-    public ItemBatchDetails save(ItemBatchDetails inputItemBatchDetails) {
-        itemBatchDetailsRepository.save(inputItemBatchDetails);
-        log.info("updated itemBatchDetails :{}", inputItemBatchDetails);
-        return inputItemBatchDetails;
-    }
 
     public ResponseMessage delete(Long itemBatchDetailsId) throws ResourceNotFoundException {
 
@@ -52,9 +55,10 @@ public class ItemBatchDetailService implements ItemBatchDetailsService {
         }
         if (!itemBatchDetails.isEmpty()) {
             log.info("Going to delete for {}", itemBatchDetails.get());
+            AppUtility.constructSuccess("Successfully deleted", itemBatchDetails.get().getItemBatchId());
             itemBatchDetailsRepository.delete(itemBatchDetails.get());
             log.info("Successfully deleted");
-            return ResponseMessage.builder().details("Successfully deleted").build();
+            return ResponseMessage.builder().responseMessage("Successfully deleted").build();
         }
         return null;
     }

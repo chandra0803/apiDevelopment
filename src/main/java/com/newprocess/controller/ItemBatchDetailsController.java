@@ -12,11 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -41,11 +39,9 @@ public class ItemBatchDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = ItemBatchDetails.class)))
 
-    public ResponseEntity<ItemBatchDetails> getItemBatchDetailsById(@PathVariable(value = "id") Long employeeId)
+    public ResponseMessage getItemBatchDetailsById(@PathVariable(value = "id") Long itemId)
             throws ResourceNotFoundException {
-        ItemBatchDetails itemBatchDetails = itemBatchDetailsRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("ItemBatch Details not found for this id :: " + employeeId));
-        return ResponseEntity.ok().body(itemBatchDetails);
+        return itemBatchDetailsService.getById(itemId);
     }
 
     @PostMapping("/itemBatchDetails")
@@ -57,14 +53,13 @@ public class ItemBatchDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = ItemBatchDetails.class)))
 
-    public ResponseEntity createItemBatchDetails(@RequestBody ItemBatchDetails itemBatchDetails) {
-        itemBatchDetailsService.save(itemBatchDetails);
-        return ResponseEntity.ok("ItemBatch details successfully created");
+    public ResponseMessage createItemBatchDetails(@RequestBody ItemBatchDetails itemBatchDetails) {
+        return itemBatchDetailsService.save(itemBatchDetails);
     }
 
     @DeleteMapping("/itemBatchDetails/{id}")
     public ResponseMessage deleteItemBatchDetails(@PathVariable(value = "id") Long itemBatchDetailsId)
             throws ResourceNotFoundException {
-       return itemBatchDetailsService.delete(itemBatchDetailsId);
+        return itemBatchDetailsService.delete(itemBatchDetailsId);
     }
 }

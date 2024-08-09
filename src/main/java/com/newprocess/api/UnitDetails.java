@@ -26,13 +26,13 @@ public class UnitDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "unit_pk", nullable = false, length = 20)
-    private Long unitPk;
+    private Long unitId;
 
     @Column(name = "unit_unit", length = 50)
     private String unitUnit;
 
     @Column(name = "unit_unitname", length = 50)
-    private String unitUnitname;
+    private String unitUnitName;
 
     @CreatedBy
     @Column(name = "unit_created_by", length = 20)

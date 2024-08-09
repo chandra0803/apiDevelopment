@@ -12,11 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -41,11 +39,9 @@ public class ItemDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = ItemDetails.class)))
 
-    public ResponseEntity<ItemDetails> getItemDetailsById(@PathVariable(value = "id") Long employeeId)
+    public ResponseMessage getItemDetailsById(@PathVariable(value = "id") Long itemDetailsId)
             throws ResourceNotFoundException {
-        ItemDetails itemDetails = itemDetailsRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("ItemDetails Details not found for this id :: " + employeeId));
-        return ResponseEntity.ok().body(itemDetails);
+        return itemDetailsService.getById(itemDetailsId);
     }
 
     @PostMapping("/itemDetails")
@@ -57,14 +53,13 @@ public class ItemDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = ItemDetails.class)))
 
-    public ResponseEntity createItemDetails(@RequestBody ItemDetails itemDetails) {
-        itemDetailsService.save(itemDetails);
-        return ResponseEntity.ok("ItemDetails details successfully created");
+    public ResponseMessage createItemDetails(@RequestBody ItemDetails itemDetails) {
+        return itemDetailsService.save(itemDetails);
     }
 
     @DeleteMapping("/itemDetails/{id}")
     public ResponseMessage deleteItemDetails(@PathVariable(value = "id") Long itemDetailsId)
             throws ResourceNotFoundException {
-      return itemDetailsService.delete(itemDetailsId);
+        return itemDetailsService.delete(itemDetailsId);
     }
 }

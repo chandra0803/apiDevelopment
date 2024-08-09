@@ -32,7 +32,7 @@ public class OperatorDetails {
     private String operatorPassword;
 
     @Column(name = "oprtr_privilage", length = 50)
-    private Integer operatorPrivilage;
+    private Integer operatorPrivilege;
 
     @Column(name = "oprtr_phoneno", length = 50)
     private String operatorPhoneNo;
@@ -41,10 +41,10 @@ public class OperatorDetails {
     private String operatorEmail;
 
     @Column(name = "oprtr_branch_id", nullable = false, length = 50)
-    private Long oprtrBranchId;
+    private Long operatorBranchId;
 
     @Column(name = "oprtr_company_id", nullable = false, length = 50)
-    private Long oprtrCompanyId;
+    private Long operatorCompanyId;
 
     @Column(name = "oprtr_created_by", length = 50)
     private Long operatorCreatedBy;

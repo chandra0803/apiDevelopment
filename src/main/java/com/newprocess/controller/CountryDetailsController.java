@@ -12,11 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -41,11 +39,9 @@ public class CountryDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = CountryDetails.class)))
 
-    public ResponseEntity<CountryDetails> getCountryDetailsById(@PathVariable(value = "id") Long employeeId)
+    public ResponseMessage getCountryDetailsById(@PathVariable(value = "id") Long countryId)
             throws ResourceNotFoundException {
-        CountryDetails countryDetails = countryDetailsRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Country Details not found for this id :: " + employeeId));
-        return ResponseEntity.ok().body(countryDetails);
+        return countryDetailsService.getById(countryId);
     }
 
     @PostMapping("/countryDetails")
@@ -57,9 +53,8 @@ public class CountryDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = CountryDetails.class)))
 
-    public ResponseEntity createCountryDetails(@RequestBody CountryDetails countryDetails) {
-        countryDetailsService.save(countryDetails);
-        return ResponseEntity.ok("Country details successfully created");
+    public ResponseMessage createCountryDetails(@RequestBody CountryDetails countryDetails) {
+        return countryDetailsService.save(countryDetails);
     }
 
     @DeleteMapping("/countryDetails/{id}")

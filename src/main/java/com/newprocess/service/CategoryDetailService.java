@@ -32,16 +32,18 @@ public class CategoryDetailService implements CategoryDetailsService {
         return categoryDetails;
     }
 
-    @Override
-    public CategoryDetails getById(Long id) {
-        return categoryDetailsRepository.findById(id).orElse(null);
+    public ResponseMessage getById(Long id) {
+        Optional<CategoryDetails> categoryDetails = categoryDetailsRepository.findById(id);
+        if (categoryDetails.isEmpty()) {
+            return AppUtility.constructFailure("Category Details not found for this id " + id, id);
+        } else {
+            return AppUtility.constructSuccess(categoryDetails, id);
+        }
     }
 
-
-    public CategoryDetails save(CategoryDetails inputCategoryDetails) {
-        categoryDetailsRepository.save(inputCategoryDetails);
-        log.info("updated categoryDetails :{}", inputCategoryDetails);
-        return inputCategoryDetails;
+    public ResponseMessage save(CategoryDetails inputCategoryDetails) {
+        log.info("Request:: CategoryDetails :{}", inputCategoryDetails);
+       return AppUtility.saveOrUpdateDomain(inputCategoryDetails.getCategoryId(),inputCategoryDetails, categoryDetailsRepository);
     }
 
     public ResponseMessage delete(Long categoryDetailsId) throws ResourceNotFoundException {
@@ -52,9 +54,11 @@ public class CategoryDetailService implements CategoryDetailsService {
         }
         if (!categoryDetails.isEmpty()) {
             log.info("Going to delete for {}", categoryDetails.get());
+            AppUtility.constructSuccess("Successfully deleted", categoryDetails.get().getCategoryId());
+
             categoryDetailsRepository.delete(categoryDetails.get());
             log.info("Successfully deleted");
-            return ResponseMessage.builder().details("Successfully deleted").build();
+            return ResponseMessage.builder().responseMessage("Successfully deleted").build();
         }
         return null;
     }

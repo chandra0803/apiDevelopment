@@ -26,37 +26,37 @@ public class CountryDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ctry_countryid", nullable = false, length = 20)
-    private Long ctryCountryId;
+    private Long countryCountryId;
 
     @Column(name = "ctry_code", length = 50)
-    private String ctryCode;
+    private String countryCode;
 
     @Column(name = "ctry_name", length = 50)
-    private String ctryName;
+    private String countryName;
 
     @Column(name = "ctry_branch_id", length = 50)
-    private Long ctryBranchId;
+    private Long countryBranchId;
 
     @Column(name = "ctry_company_id", length = 50)
-    private Long ctryCompanyId;
+    private Long countryCompanyId;
 
     @Column(name = "ctry_status", length = 50)
-    private Integer ctryStatus;
+    private Integer countryStatus;
 
     @CreatedBy
     @Column(name = "ctry_created_by", length = 50)
-    private Long ctryCreatedBy;
+    private Long countryCreatedBy;
 
     @LastModifiedBy
     @Column(name = "ctry_modified_by", length = 50)
-    private Long ctryModifiedBy;
+    private Long countryModifiedBy;
 
     @LastModifiedDate
     @Column(name = "ctry_modified_date", length = 50)
-    private Timestamp ctryModifiedDate;
+    private Timestamp countryModifiedDate;
 
     @CreatedDate
     @Column(name = "ctry_created_date", length = 50)
-    private Timestamp ctryCreatedDate;
+    private Timestamp countryCreatedDate;
 
 }

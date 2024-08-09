@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,17 +23,19 @@ import java.time.LocalDateTime;
 @Builder
 @EntityListeners(AuditingEntityListener.class)
 @EnableJpaAuditing
+@DynamicInsert
+@DynamicUpdate
 @Entity
 @Table(name = "tblpos_branch_details")
 public class BranchDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "branch_pk", nullable = false, length = 20)
-    private Long branchDetailsId;
+    private Long branchId;
 
-    @NotNull(message = "BranchCompanyId is required")
+    @NotNull(message = "Branch CompanyId is required")
     @Column(name = "branch_company_id", nullable = false, length = 50)
-    private String branchCompanyId;
+    private String companyId;
 
     @Column(name = "branch_code", length = 50)
     private String branchCode;
@@ -50,6 +54,4 @@ public class BranchDetails {
     @Column(nullable = false, columnDefinition = "bit default 0", length = 1)
     private int branchStatus;
 
-    @OneToOne(mappedBy = "branchDetails", cascade = CascadeType.ALL)
-    private CompanyDetails companyDetails;
 }

@@ -12,11 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -41,11 +39,9 @@ public class RateDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = RateDetails.class)))
 
-    public ResponseEntity<RateDetails> getRateDetailsById(@PathVariable(value = "id") Long employeeId)
+    public ResponseMessage getRateDetailsById(@PathVariable(value = "id") Long rateDetailsId)
             throws ResourceNotFoundException {
-        RateDetails rateDetails = rateDetailsRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("RateDetails Details not found for this id :: " + employeeId));
-        return ResponseEntity.ok().body(rateDetails);
+        return rateDetailsService.getById(rateDetailsId);
     }
 
     @PostMapping("/rateDetails")
@@ -57,14 +53,13 @@ public class RateDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = RateDetails.class)))
 
-    public ResponseEntity createRateDetails(@RequestBody RateDetails rateDetails) {
-        rateDetailsService.save(rateDetails);
-        return ResponseEntity.ok("RateDetails details successfully created");
+    public ResponseMessage createRateDetails(@RequestBody RateDetails rateDetails) {
+        return rateDetailsService.save(rateDetails);
     }
 
     @DeleteMapping("/rateDetails/{id}")
     public ResponseMessage deleteRateDetails(@PathVariable(value = "id") Long rateDetailsId)
             throws ResourceNotFoundException {
-       return rateDetailsService.delete(rateDetailsId);
+        return rateDetailsService.delete(rateDetailsId);
     }
 }

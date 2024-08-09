@@ -26,26 +26,32 @@ public class BranchDetailService implements BranchDetailsService {
 
     @Override
     public List<BranchDetails> listAll() {
-        List<BranchDetails> branchDetails = new ArrayList<>();
-        branchDetailsRepository.findAll().forEach(branchDetails::add);
-        return branchDetails;
+        List<BranchDetails> branchDetailsList = new ArrayList<>();
+        branchDetailsRepository.findAll().forEach(branchDetailsList::add);
+        log.info("Total no of items:{}", branchDetailsList.size());
+        return branchDetailsList;
     }
 
     @Override
-    public BranchDetails getById(Long id) {
-        return branchDetailsRepository.findById(id).orElse(null);
+    public ResponseMessage getById(Long id) {
+        Optional<BranchDetails> branchDetails = branchDetailsRepository.findById(id);
+        if (branchDetails.isEmpty()) {
+            return AppUtility.constructFailure("Branch Details not found for this id " + id, id);
+
+        } else {
+            return AppUtility.constructSuccess(branchDetails, id);
+        }
     }
 
-
-    public BranchDetails save(BranchDetails inputBranchDetails) {
-        branchDetailsRepository.save(inputBranchDetails);
-        log.info("updated branchDetails :{}", inputBranchDetails);
-        return inputBranchDetails;
-    }
+    public ResponseMessage save(BranchDetails inputBranchDetails) {
+        log.info("Request:: branchDetails :{}", inputBranchDetails);
+        return  AppUtility.saveOrUpdateDomain(inputBranchDetails.getBranchId(),inputBranchDetails, branchDetailsRepository);
+     }
 
     public ResponseMessage delete(Long branchDetailsId) throws ResourceNotFoundException {
 
         Optional<BranchDetails> branchDetails = branchDetailsRepository.findById(branchDetailsId);
+        log.info("Deleting id:{}",branchDetailsId);
         if (branchDetails.isEmpty()) {
             return AppUtility.contructErrorMsg("Branch Details", String.valueOf(branchDetailsId));
         }
@@ -53,7 +59,7 @@ public class BranchDetailService implements BranchDetailsService {
             log.info("Going to delete for {}", branchDetails.get());
             branchDetailsRepository.delete(branchDetails.get());
             log.info("Successfully deleted");
-            return ResponseMessage.builder().details("Successfully deleted").build();
+            return ResponseMessage.builder().responseMessage("Successfully deleted").build();
         }
         return null;
     }

@@ -12,11 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -41,11 +39,9 @@ public class CompanyDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = CompanyDetails.class)))
 
-    public ResponseEntity<CompanyDetails> getCompanyDetailsById(@PathVariable(value = "id") Long employeeId)
+    public ResponseMessage getCompanyDetailsById(@PathVariable(value = "id") Long companyId)
             throws ResourceNotFoundException {
-        CompanyDetails companyDetails = companyDetailsRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Branch Details not found for this id :: " + employeeId));
-        return ResponseEntity.ok().body(companyDetails);
+        return companyDetailsService.getById(companyId);
     }
 
     @PostMapping("/companyDetails")
@@ -57,9 +53,8 @@ public class CompanyDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = CompanyDetails.class)))
 
-    public ResponseEntity createCompanyDetails(@RequestBody CompanyDetails companyDetails) {
-        companyDetailsService.save(companyDetails);
-        return ResponseEntity.ok("Company details successfully created");
+    public ResponseMessage createCompanyDetails(@RequestBody CompanyDetails companyDetails) {
+        return companyDetailsService.save(companyDetails);
     }
 
 

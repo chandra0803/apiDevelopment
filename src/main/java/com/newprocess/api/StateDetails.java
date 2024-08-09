@@ -27,41 +27,41 @@ public class StateDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stat_statepk", nullable = false, length = 20)
-    private Long statStatepk;
+    private Long stateId;
 
     @Column(name = "stat_country_id", nullable = false, length = 50)
-    private Long statCountryId;
+    private Long stateCountryId;
 
     @Column(name = "stat_code", length = 50)
-    private String statCode;
+    private String stateCode;
 
     @Column(name = "stat_name", length = 50)
-    private String statName;
+    private String stateName;
 
     @LastModifiedDate
     @Column(name = "stat_branch_id", nullable = false, length = 50)
-    private Long statBranchId;
+    private Long stateBranchId;
 
     @CreatedDate
     @Column(name = "stat_company_id", nullable = false, length = 50)
     private Long statCompanyId;
 
-    @Column(name = "stat_status", nullable = false)
-    private Integer statStatus;
+    @Column(name = "stat_status", columnDefinition = "bit default 0", length = 1, nullable = false)
+    private Integer stateStatus;
 
     @CreatedBy
     @Column(name = "stat_created_by", length = 20)
-    private Long statCreatedBy;
+    private Long stateCreatedBy;
 
     @LastModifiedBy
     @Column(name = "stat_modified_by", length = 20)
-    private Long statModifiedBy;
+    private Long stateModifiedBy;
 
     @LastModifiedDate
     @Column(name = "stat_modified_date", length = 50)
-    private LocalDateTime staModifiedDate;
+    private LocalDateTime stateModifiedDate;
 
     @CreatedDate
     @Column(name = "stat_created_date", nullable = false, length = 50)
-    private Timestamp statCreatedDate;
+    private Timestamp stateCreatedDate;
 }
