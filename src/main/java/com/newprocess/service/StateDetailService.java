@@ -32,17 +32,19 @@ public class StateDetailService implements StateDetailsService {
         return stateDetails;
     }
 
-    @Override
-    public StateDetails getById(Long id) {
-        return stateDetailsRepository.findById(id).orElse(null);
+    public ResponseMessage getById(Long id) {
+        Optional<StateDetails> stateDetails = stateDetailsRepository.findById(id);
+        if (stateDetails.isEmpty()) {
+            return AppUtility.constructFailure("State Details not found for this id " + id, id);
+        } else {
+            return AppUtility.constructSuccess(stateDetails, id);
+        }
     }
 
-
-    public StateDetails save(StateDetails inputStateDetails) {
-        stateDetailsRepository.save(inputStateDetails);
-        log.info("updated stateDetails :{}", inputStateDetails);
-        return inputStateDetails;
-    }
+    public ResponseMessage save(StateDetails inputStateDetails) {
+        log.info("Request:: StateDetails Details :{}", inputStateDetails);
+        return AppUtility.saveOrUpdateDomain(inputStateDetails.getStateId(),inputStateDetails, stateDetailsRepository);
+     }
 
     public ResponseMessage delete(Long stateDetailsId) throws ResourceNotFoundException {
 
@@ -52,9 +54,10 @@ public class StateDetailService implements StateDetailsService {
         }
         if (!stateDetails.isEmpty()) {
             log.info("Going to delete for {}", stateDetails.get());
+            AppUtility.constructSuccess("Successfully deleted", stateDetails.get().getStateId());
             stateDetailsRepository.delete(stateDetails.get());
             log.info("Successfully deleted");
-            return ResponseMessage.builder().details("Successfully deleted").build();
+            return ResponseMessage.builder().responseMessage("Successfully deleted").build();
         }
         return null;
     }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,48 +19,51 @@ import java.time.LocalDateTime;
 @Builder
 @EntityListeners(AuditingEntityListener.class)
 @EnableJpaAuditing
+@DynamicInsert
 @Entity
 @Table(name = "item_batch_details_tab")
 public class ItemBatchDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itb_id", nullable = false, length = 20)
-    private Long itbId;
+    private Long itemBatchId;
 
     @Column(name = "item_id", nullable = false, length = 20)
-    private Long item_id;        // Primary Key from 'itemdetails_tab' Table
+    private Long itemId;
 
     @Column(name = "batchcode", length = 100)
-    private String batchcode;
+    private String batchCode;
 
     @Column(name = "item_stock", length = 100)
-    private Long item_stock;
+    private Long itemStock;
+
     @Column(name = "mrp_rate")
-    private Long mrp_rate;
+    private Long mrpRate;
 
     @Column(name = "rate_a")
-    private Long rate_a;
+    private Long rateA;
 
-    @Column(name = "rate_b")
-    private Long rate_b;
+    @Column(name = "rate_b", columnDefinition = "bit default 0")
+    private Long rateB;
 
-    @Column(name = "rate_c")
-    private Long rate_c;
+    @Column(name = "rate_c", columnDefinition = "bit default 0")
 
-    @Column(name = "rate_d")
-    private Long rate_d;
+    private Long rateC;
+
+    @Column(name = "rate_d", columnDefinition = "bit default 0")
+    private Long rateD;
 
     @Column(name = "minsaleqty")
-    private Long minsaleqty;
+    private Long minSaleQuantity;
 
     @Column(name = "rateedit")
-    private Long rateedit;
+    private Long rateEdit;
 
     @CreatedDate
     @Column(name = "createddate")
-    private LocalDateTime createddate;
+    private LocalDateTime createDate;
 
     @CreatedBy
     @Column(name = "createdby")
-    private Long createdby;
+    private Long createdBy;
 }

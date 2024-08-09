@@ -31,17 +31,20 @@ public class OperatorDetailService implements OperatorDetailsService {
         return operatorDetails;
     }
 
-    @Override
-    public OperatorDetails getById(Long id) {
-        return operatorDetailsRepository.findById(id).orElse(null);
+    public ResponseMessage getById(Long id) {
+        Optional<OperatorDetails> operatorDetails = operatorDetailsRepository.findById(id);
+        if (operatorDetails.isEmpty()) {
+            return AppUtility.constructFailure("operator Details not found for this id " + id, id);
+        } else {
+            return AppUtility.constructSuccess(operatorDetails, id);
+        }
     }
 
+    public ResponseMessage save(OperatorDetails operatorDetails) {
+        log.info("Request:: operator Details :{}", operatorDetails);
+        return AppUtility.saveOrUpdateDomain(operatorDetails.getOperatorId(),operatorDetails, operatorDetailsRepository);
+     }
 
-    public OperatorDetails save(OperatorDetails inputOperatorDetails) {
-        operatorDetailsRepository.save(inputOperatorDetails);
-        log.info("updated operatorDetails :{}", inputOperatorDetails);
-        return inputOperatorDetails;
-    }
 
     public ResponseMessage delete(Long operatorDetailsId) throws ResourceNotFoundException {
 
@@ -51,9 +54,10 @@ public class OperatorDetailService implements OperatorDetailsService {
         }
         if (!operatorDetails.isEmpty()) {
             log.info("Going to delete for {}", operatorDetails.get());
+            AppUtility.constructSuccess("Successfully deleted", operatorDetails.get().getOperatorId());
             operatorDetailsRepository.delete(operatorDetails.get());
             log.info("Successfully deleted");
-            return ResponseMessage.builder().details("Successfully deleted").build();
+            return ResponseMessage.builder().responseMessage("Successfully deleted").build();
         }
         return null;
     }

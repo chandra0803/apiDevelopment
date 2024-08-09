@@ -5,7 +5,6 @@ import com.newprocess.api.ItemBatchDetails;
 import com.newprocess.api.ResponseMessage;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Chandra on 1/10/17.
@@ -14,9 +13,9 @@ public interface ItemBatchDetailsService {
 
     public List<ItemBatchDetails> listAll();
 
-    public ItemBatchDetails getById(Long id);
+    public ResponseMessage getById(Long id);
 
-    public ItemBatchDetails save(ItemBatchDetails itemBatchDetails);
+    public ResponseMessage save(ItemBatchDetails itemBatchDetails);
 
     public ResponseMessage delete(Long id) throws ResourceNotFoundException;
 }

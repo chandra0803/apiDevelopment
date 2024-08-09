@@ -12,11 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -41,11 +39,9 @@ public class OperatorDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = OperatorDetails.class)))
 
-    public ResponseEntity<OperatorDetails> getOperatorDetailsById(@PathVariable(value = "id") Long employeeId)
+    public ResponseMessage getOperatorDetailsById(@PathVariable(value = "id") Long operatorId)
             throws ResourceNotFoundException {
-        OperatorDetails operatorDetails = operatorDetailsRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Operator Details not found for this id :: " + employeeId));
-        return ResponseEntity.ok().body(operatorDetails);
+        return operatorDetailsService.getById(operatorId);
     }
 
     @PostMapping("/operatorDetails")
@@ -57,14 +53,13 @@ public class OperatorDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = OperatorDetails.class)))
 
-    public ResponseEntity createOperatorDetails(@RequestBody OperatorDetails operatorDetails) {
-        operatorDetailsService.save(operatorDetails);
-        return ResponseEntity.ok("Operator details successfully created");
+    public ResponseMessage createOperatorDetails(@RequestBody OperatorDetails operatorDetails) {
+        return operatorDetailsService.save(operatorDetails);
     }
 
     @DeleteMapping("/operatorDetails/{id}")
     public ResponseMessage deleteOperatorDetails(@PathVariable(value = "id") Long operatorDetailsId)
             throws ResourceNotFoundException {
-       return operatorDetailsService.delete(operatorDetailsId);
+        return operatorDetailsService.delete(operatorDetailsId);
     }
 }

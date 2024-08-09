@@ -15,7 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 public class ResponseMessage<Object> {
 
-    private String status;
-    private Object details;
+    private Integer responseFlag;
+    private String responseCode;
+    private Object responseMessage;
+    private ResponseValue id;
     private List<ErrorDetails> errorDetailsList;
 }

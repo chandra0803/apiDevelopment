@@ -31,17 +31,19 @@ public class CountryDetailService implements CountryDetailsService {
         return countryDetails;
     }
 
-    @Override
-    public CountryDetails getById(Long id) {
-        return countryDetailsRepository.findById(id).orElse(null);
+    public ResponseMessage getById(Long id) {
+        Optional<CountryDetails> countryDetails = countryDetailsRepository.findById(id);
+        if (countryDetails.isEmpty()) {
+            return AppUtility.constructFailure("country Details not found for this id " + id, id);
+        } else {
+            return AppUtility.constructSuccess(countryDetails, id);
+        }
     }
 
-
-    public CountryDetails save(CountryDetails inputCountryDetails) {
-        countryDetailsRepository.save(inputCountryDetails);
-        log.info("updated countryDetails :{}", inputCountryDetails);
-        return inputCountryDetails;
-    }
+    public ResponseMessage save(CountryDetails inputCountryDetails) {
+        log.info("Request:: Country Details :{}", inputCountryDetails);
+        return AppUtility.saveOrUpdateDomain(inputCountryDetails.getCountryCountryId(),inputCountryDetails, countryDetailsRepository);
+   }
 
     public ResponseMessage delete(Long countryDetailsId) throws ResourceNotFoundException {
 
@@ -51,9 +53,11 @@ public class CountryDetailService implements CountryDetailsService {
         }
         if (!countryDetails.isEmpty()) {
             log.info("Going to delete for {}", countryDetails.get());
+            AppUtility.constructSuccess("Successfully deleted", countryDetails.get().getCountryCountryId());
+
             countryDetailsRepository.delete(countryDetails.get());
             log.info("Successfully deleted");
-            return ResponseMessage.builder().details("Successfully deleted").build();
+            return ResponseMessage.builder().responseMessage("Successfully deleted").build();
         }
         return null;
     }

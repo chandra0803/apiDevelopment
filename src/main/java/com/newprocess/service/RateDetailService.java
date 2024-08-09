@@ -32,16 +32,18 @@ public class RateDetailService implements RateDetailsService {
         return rateDetails;
     }
 
-    @Override
-    public RateDetails getById(Long id) {
-        return rateDetailsRepository.findById(id).orElse(null);
+    public ResponseMessage getById(Long id) {
+        Optional<RateDetails> rateDetails = rateDetailsRepository.findById(id);
+        if (rateDetails.isEmpty()) {
+            return AppUtility.constructFailure("Rate Details not found for this id " + id, id);
+        } else {
+            return AppUtility.constructSuccess(rateDetails, id);
+        }
     }
 
-
-    public RateDetails save(RateDetails inputRateDetails) {
-        rateDetailsRepository.save(inputRateDetails);
-        log.info("updated rateDetails :{}", inputRateDetails);
-        return inputRateDetails;
+    public ResponseMessage save(RateDetails inputRateDetails) {
+        log.info("Request:: RateDetails Details :{}", inputRateDetails);
+        return  AppUtility.saveOrUpdateDomain(inputRateDetails.getRateId().longValue(),inputRateDetails, rateDetailsRepository);
     }
 
     public ResponseMessage delete(Long rateDetailsId) throws ResourceNotFoundException {
@@ -52,9 +54,10 @@ public class RateDetailService implements RateDetailsService {
         }
         if (!rateDetails.isEmpty()) {
             log.info("Going to delete for {}", rateDetails.get());
+            AppUtility.constructSuccess("Successfully deleted", rateDetails.get().getRateId().longValue());
             rateDetailsRepository.delete(rateDetails.get());
             log.info("Successfully deleted");
-            return ResponseMessage.builder().details("Successfully deleted").build();
+            return ResponseMessage.builder().responseMessage("Successfully deleted").build();
         }
         return null;
     }

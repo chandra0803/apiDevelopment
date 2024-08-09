@@ -32,16 +32,18 @@ public class UnitDetailService implements UnitDetailsService {
         return unitDetails;
     }
 
-    @Override
-    public UnitDetails getById(Long id) {
-        return unitDetailsRepository.findById(id).orElse(null);
+    public ResponseMessage getById(Long id) {
+        Optional<UnitDetails> unitDetails = unitDetailsRepository.findById(id);
+        if (unitDetails.isEmpty()) {
+            return AppUtility.constructFailure("Unit Details not found for this id " + id, id);
+        } else {
+            return AppUtility.constructSuccess(unitDetails, id);
+        }
     }
 
-
-    public UnitDetails save(UnitDetails inputUnitDetails) {
-        unitDetailsRepository.save(inputUnitDetails);
-        log.info("updated unitDetails :{}", inputUnitDetails);
-        return inputUnitDetails;
+    public ResponseMessage save(UnitDetails inputUnitDetails) {
+        log.info("Request:: UnitDetails Details :{}", inputUnitDetails);
+        return  AppUtility.saveOrUpdateDomain(inputUnitDetails.getUnitId(),inputUnitDetails, unitDetailsRepository);
     }
 
     public ResponseMessage delete(Long unitDetailsId) throws ResourceNotFoundException {
@@ -52,9 +54,10 @@ public class UnitDetailService implements UnitDetailsService {
         }
         if (!unitDetails.isEmpty()) {
             log.info("Going to delete for {}", unitDetails.get());
+            AppUtility.constructSuccess("Successfully deleted", unitDetails.get().getUnitId());
             unitDetailsRepository.delete(unitDetails.get());
             log.info("Successfully deleted");
-            return ResponseMessage.builder().details("Successfully deleted").build();
+            return ResponseMessage.builder().responseMessage("Successfully deleted").build();
         }
         return null;
     }

@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,11 +39,9 @@ public class BranchDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = BranchDetails.class)))
 
-    public ResponseEntity<BranchDetails> getBranchDetailsById(@PathVariable(value = "id") Long employeeId)
+    public ResponseMessage getBranchDetailsById(@PathVariable(value = "id") Long branchId)
             throws ResourceNotFoundException {
-        BranchDetails branchDetails = branchDetailsRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Branch Details not found for this id :: " + employeeId));
-        return ResponseEntity.ok().body(branchDetails);
+        return branchDetailsService.getById(branchId);
     }
 
     @PostMapping("/branchDetails")
@@ -56,9 +53,8 @@ public class BranchDetailsController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = @Content(schema = @Schema(implementation = BranchDetails.class)))
 
-    public ResponseEntity createBranchDetails(@RequestBody BranchDetails branchDetails) {
-        branchDetailsService.save(branchDetails);
-        return ResponseEntity.ok("Branch details successfully created");
+    public ResponseMessage createOrUpdateBranchDetails(@RequestBody BranchDetails branchDetails) {
+        return branchDetailsService.save(branchDetails);
     }
 
     @DeleteMapping("/branchDetails/{id}")
